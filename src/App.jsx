@@ -724,8 +724,10 @@ export default function KOS() {
   // Storage persistente
   const [reports, setReports] = useState(() => {
     try {
-      const saved = localStorage.getItem("kos_v3");
-      if (saved) return JSON.parse(saved);
+      if (typeof window !== "undefined" && window.localStorage) {
+        const saved = localStorage.getItem("kos_v3");
+        if (saved) return JSON.parse(saved);
+      }
     } catch {}
     // Carga seed de Email Marketing (único área con datos en el Excel)
     const seed = {};
@@ -735,7 +737,7 @@ export default function KOS() {
   });
 
   useEffect(() => {
-    try { localStorage.setItem("kos_v3", JSON.stringify(reports)); } catch {}
+    try { if (typeof window !== "undefined" && window.localStorage) { localStorage.setItem("kos_v3", JSON.stringify(reports)); } } catch {}
   }, [reports]);
 
   const saveReport = (data) => {
